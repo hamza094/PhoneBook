@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,3 +15,14 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::group(['prefix'=>'v1'], function () {
+  Route::apiResources([
+      'users' => UserController::class,
+      'contacts' => ContactController::class,
+  ]);
+});
+
+Route::fallback(function() {
+    return response()->json(['message' => 'Not Found.'], 404);
+});

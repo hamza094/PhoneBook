@@ -3,10 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use F9Web\ApiResponseHelpers;
+use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
 {
+  use ApiResponseHelpers;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return UserResource::collection(User::all());
     }
 
     /**
@@ -23,9 +30,15 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        $user = User::create($request->validated());
+
+        return $this->respondWithSuccess([
+          'msg'=>'User Created Successfully',
+          'user'=>$user
+        ]);
+
     }
 
     /**
@@ -34,9 +47,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+          return new UserResource($user);
     }
 
     /**
@@ -46,9 +59,14 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request,User $user)
     {
-        //
+        $user->update($request->validated());
+
+        return $this->respondWithSuccess([
+          'msg'=>'User Updated Successfully',
+          'user'=>$user
+        ]);
     }
 
     /**
@@ -57,8 +75,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return $this->respondWithSuccess([
+          'msg'=>'User Updated Successfully'
+        ]);
     }
 }

@@ -22,4 +22,9 @@ class User extends Authenticatable
      public function contacts(){
        return $this->hasMany(Contact::class);
      }
+
+     public function path()
+     {
+      return "/api/v1/users/{$this->id}";
+     }
 }
