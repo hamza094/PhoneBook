@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\User;
+use App\Models\Contact;
 use Tests\TestCase;
 
 class ContactTest extends TestCase
@@ -13,46 +15,46 @@ class ContactTest extends TestCase
      *
      * @return void
      */
+
      /** @test */
-     public function user_can_be_created()
+     public function contact_can_be_created()
      {
-       $this->postJson('api/v1/users',
-           ['firstname' => 'James','lastname'=>'jerry','isblocked'=>false])
+       $user=User::factory()->create();
+       $this->postJson('api/v1/contacts',
+           ['user_id'=>$user->id,'mobile' => '0947867895','type'=>'home'])
            ->assertStatus(200);
-         $this->assertDatabaseHas('users',['firstname'=>'James']);
+         $this->assertDatabaseHas('contacts',['mobile'=>'0947867895']);
    }
 
    /** @test */
-   public function user_required_filed_not_be_null(){
-     $this->postJson('api/v1/users',
-         ['firstname'=>null,'isblocked'=>false])
+   public function contact_required_filed_not_be_null(){
+     $this->postJson('api/v1/contacts',
+         ['mobile'=>null,'type'=>'home'])
          ->assertStatus(422);
    }
 
-    /** @test */
-   public function user_resource_can_be_viewed(){
-       $user=User::factory()->create();
-       $this->getJson($user->path())->assertSee($user->firstname)
+
+   /** @test */
+   public function contact_resource_can_be_viewed(){
+       $contact=Contact::factory()->create();
+       $this->getJson($contact->path())->assertSee($contact->mobile)
        ->assertStatus(200);
    }
 
    /** @test */
-   public function a_user_can_be_updated(){
-      $user=User::factory()->create();
-      $firstname="jerry";
-      $this->withoutExceptionHandling()->patchJson($user->path(),['firstname'=>$firstname,
-      'isblocked'=>$user->isblocked]);
-      $this->assertDatabaseHas('users',['id'=>$user->id,'firstname'=>$firstname]);
+   public function a_contact_can_be_updated(){
+      $contact=Contact::factory()->create();
+      $mobile='0947867895';
+      $this->patchJson($contact->path(),['mobile'=>$mobile,
+      'type'=>$contact->type,'user_id'=>$contact->user->id]);
+      $this->assertDatabaseHas('contacts',['id'=>$contact->id,'mobile'=>$mobile]);
    }
 
-   /** @test */
-   public function a_user_can_be_deleted(){
-     $user=User::factory()->create();
-     $this->assertCount(1,$user->get());
-     $this->withoutExceptionHandling()->deleteJson($user->path())->assertStatus(200);
-     $this->assertCount(0,$user->get());
+  /** @test */
+   public function a_contact_can_be_deleted(){
+     $contact=Contact::factory()->create();
+     $this->deleteJson($contact->path())->assertStatus(200);
+     $this->assertDatabaseMissing('contacts',['id'=>$contact->id]);
   }
-
-
 
 }

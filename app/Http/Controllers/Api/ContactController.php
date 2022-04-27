@@ -3,10 +3,17 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Contact;
 use Illuminate\Http\Request;
+use F9Web\ApiResponseHelpers;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\ContactRequest;
+use App\Http\Resources\ContactResource;
+
 
 class ContactController extends Controller
 {
+  use ApiResponseHelpers;
     /**
      * Display a listing of the resource.
      *
@@ -14,6 +21,7 @@ class ContactController extends Controller
      */
     public function index()
     {
+       return ContactResource::collection(Contact::all());
     }
 
     /**
@@ -22,9 +30,17 @@ class ContactController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
-        //
+        $user=User::findOrFail($request->user_id);
+
+        $contact=$user->contacts()->create($request->validated());
+
+        return $this->respondWithSuccess([
+          'msg'=>'Contact Created Successfully',
+          'contact'=>new ContactResource($contact)
+        ]);
+
     }
 
     /**
@@ -33,9 +49,9 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Contact $contact)
     {
-        //
+        return new ContactResource($contact);
     }
 
     /**
@@ -45,9 +61,14 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ContactRequest $request, Contact $contact)
     {
-        //
+        $contact->update($request->validated());
+
+        return $this->respondWithSuccess([
+          'msg'=>'Contact Updated Successfully',
+          'contact'=>new ContactResource($contact)
+        ]);
     }
 
     /**
@@ -56,8 +77,12 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+
+        return $this->respondWithSuccess([
+          'contact'=>'Contact Deleted Successfully'
+        ]);
     }
 }

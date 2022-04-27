@@ -19,12 +19,15 @@ class User extends Authenticatable
      */
      protected $guarded = [];
 
-     public function contacts(){
-       return $this->hasMany(Contact::class);
+     protected $with = ['contacts'];
+
+     public function contacts()
+     {
+        return $this->hasMany(Contact::class);
      }
 
      public function path()
      {
-      return "/api/v1/users/{$this->id}";
+        return "/api/v1/users/{$this->id}";
      }
 }

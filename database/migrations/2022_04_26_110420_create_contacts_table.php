@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->enum('type', ['home', 'office']);
+            $table->foreignId('user_id');
+            $table->string('type');
             $table->string("mobile",64)->nullable();
             $table->timestamps();
         });

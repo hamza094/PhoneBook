@@ -7,6 +7,7 @@ use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
+use App\Http\Resources\UsersResource;
 use F9Web\ApiResponseHelpers;
 use Illuminate\Http\JsonResponse;
 
@@ -21,7 +22,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        //return UserResource::collection(User::all());
+        return UsersResource::collection(User::all());
+
     }
 
     /**
@@ -36,7 +39,7 @@ class UserController extends Controller
 
         return $this->respondWithSuccess([
           'msg'=>'User Created Successfully',
-          'user'=>$user
+          'user'=>new UserResource($user)
         ]);
 
     }
@@ -65,7 +68,7 @@ class UserController extends Controller
 
         return $this->respondWithSuccess([
           'msg'=>'User Updated Successfully',
-          'user'=>$user
+          'user'=>new UserResource($user)
         ]);
     }
 
@@ -80,7 +83,7 @@ class UserController extends Controller
         $user->delete();
 
         return $this->respondWithSuccess([
-          'msg'=>'User Updated Successfully'
+          'msg'=>'User Deleted Successfully'
         ]);
     }
 }

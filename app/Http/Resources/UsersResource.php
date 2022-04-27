@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\UserResource;
 
-class ContactResource extends JsonResource
+class UsersResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,12 +16,11 @@ class ContactResource extends JsonResource
     {
         return [
           'id'=>$this->id,
-          'mobile'=>$this->mobile,
-          'type'=>$this->type,
-          'created_at'=>$this->created_at->diffforHumans(),
-          'updated_at'=>$this->updated_at->diffforHumans(),
+          'firstname'=>$this->firstname,
+          'lastname'=>$this->lastname,
+          'isblocked'=>$this->blocked,
           'links' => [
-               'self' => '/api/v1/contacts/'.$this->id,
+               'self' => '/api/v1/users/'.$this->id,
            ],
         ];
     }

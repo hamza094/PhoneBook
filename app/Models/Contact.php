@@ -11,8 +11,14 @@ class Contact extends Model
 
     protected $guarded = [];
 
-    public function user(){
-      return $this->belongsTo(User::class);
+    public function user()
+    {
+       return $this->belongsTo(User::class);
+    }
+
+    public function path()
+    {
+      return "/api/v1/contacts/{$this->id}";
     }
 
 }

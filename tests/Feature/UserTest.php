@@ -35,7 +35,7 @@ class UserTest extends TestCase
     /** @test */
    public function user_resource_can_be_viewed(){
        $user=User::factory()->create();
-       $this->getJson($user->path())->assertSee($user->firstname)
+       $this->getJson($user->path())->assertSee($user->id)
        ->assertStatus(200);
    }
 

@@ -18,22 +18,9 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'firstname' => $this->faker->name(),
+            'firstname' => $this->faker->firstName,
+            'lastname'=>$this->faker->lastName,
             'isblocked'=>false
         ];
-    }
-
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return static
-     */
-    public function unverified()
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
     }
 }
