@@ -19,7 +19,7 @@ class ContactFactory extends Factory
     {
         return [
           'user_id'=>User::factory(),
-          'mobile'=>$this->faker->e164PhoneNumbe,
+          'mobile'=>'0987654321',
           'type'=>'home'
         ];
     }

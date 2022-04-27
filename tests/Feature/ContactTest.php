@@ -10,6 +10,7 @@ use Tests\TestCase;
 
 class ContactTest extends TestCase
 {
+  use RefreshDatabase;
     /**
      * A contact test example.
      *
